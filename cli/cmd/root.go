@@ -34,7 +34,7 @@ type ChubaoFSCmd struct {
 	CFSCmd *cobra.Command
 }
 
-func NewRootCmd(client *master.MasterClient) *ChubaoFSCmd {
+func NewRootCmd(client *master.MasterClient, masters []string) *ChubaoFSCmd {
 	var optShowVersion bool
 	var cmd = &ChubaoFSCmd{
 		CFSCmd: &cobra.Command{
@@ -62,6 +62,7 @@ func NewRootCmd(client *master.MasterClient) *ChubaoFSCmd {
 		newMetaPartitionCmd(client),
 		newConfigCmd(),
 		newCompatibilityCmd(),
+		newFSToolsCmd(masters),
 	)
 	return cmd
 }
