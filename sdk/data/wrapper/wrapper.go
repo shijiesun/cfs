@@ -186,6 +186,8 @@ func (w *Wrapper) replaceOrInsertPartition(dp *DataPartition) {
 		old.Status = dp.Status
 		old.ReplicaNum = dp.ReplicaNum
 		old.Hosts = dp.Hosts
+		old.Refresh()
+		dp.Metrics = old.Metrics
 	} else {
 		dp.Metrics = NewDataPartitionMetrics()
 		w.partitions[dp.PartitionID] = dp
@@ -196,6 +198,9 @@ func (w *Wrapper) replaceOrInsertPartition(dp *DataPartition) {
 	if ok && oldstatus != dp.Status {
 		log.LogInfof("partition: status change (%v) -> (%v)", old, dp)
 	}
+
+	log.LogErrorf("dp[%v] metrics: read [%v], write [%v]", dp.PartitionID, time.Duration(dp.GetAvgRead()),
+		time.Duration(dp.GetAvgWrite()))
 }
 
 func (w *Wrapper) getRandomDataPartition(partitions []*DataPartition, exclude map[string]struct{}) *DataPartition {
